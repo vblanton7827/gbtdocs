@@ -411,7 +411,7 @@ It is expected that the user is familiar with the previous content of the KFPA O
 4.0 Data Setup
 --------------
 
-The data used for example purposes comes from the RAMPS survey. Specifically, a map which covers the region 49.29° -- 49.59°, -0.23° -- -0.47° in Galactic longitude and latitude. The strategy of the RAMPS survey was the produce tiles of many small regions, which were later stiched together.
+The data used for example purposes comes from the RAMPS survey. Specifically, a map which covers the region 49.29° -- 49.59°, -0.23° -- -0.47° in Galactic longitude and latitude. The strategy of the RAMPS survey was to produce tiles of many small regions, which were later stitched together.
 
 In the case presented here, we are interested in a region centered at coordinates of 49.445, -0.35. This was observed as part of RAMPS with the project ID of AGBT16A_353, in session 39. Retrieving the data would normally involve the process of using the GBT Help Desk; however, for the purpose of following this guide, an sdfits file has been created for this exercise.
 
@@ -433,7 +433,7 @@ All commands in this example assumes that you are operating out of your designat
 4.0.2 Accessing the Data
 ________________________
 
-The next step is to copy the target data and place it in your working directory. There are multiple methods to complete this task. For the purposes of this example, the intended target file can be found at.
+The next step is to copy the target data and place it in your working directory. There are multiple methods to complete this task. For the purposes of this example, the intended target file can be found at:
 
 .. code-block:: bash
 
@@ -540,7 +540,7 @@ Now that scans can be loaded into GBTIDL, our next step is to use GBTIDL Plotter
 4.1.2 Temperature Scaling
 _________________________
 
-A remaining factor to account for is the temperature scale we wish our spectra to be calibrated on. By default, GBTIDL present spectra on the antenna temperature (Ta) scale. In order to convert this scaling to flux density (Jy) or corrected antenna temperature (Ta*), it is necessary to account for the sky opacity. The approach to determining this is outlined in the Sky Opacity Guide. For the example presented here, we find a sky opacity tau value of 0.03.
+A remaining factor to account for is the temperature scale we wish our spectra to be calibrated on. By default, GBTIDL presents spectra on the antenna temperature (Ta) scale. In order to convert this scaling to flux density (Jy) or corrected antenna temperature (Ta*), it is necessary to account for the sky opacity. The approach to determining this is outlined in the Sky Opacity Guide. For the example presented here, we find a sky opacity tau value of 0.03.
 
 .. todo::
 
@@ -556,7 +556,7 @@ We can now scale to the corrected antenna temperature (Ta*) scale via:
  
    Care must be taken here to include a tau value. If the previous command is run without specifying tau, a default 'representative' value is used (0.032 in this case). This could potentially result in poorly calibrated data.
 
-Note the scaling to a main beam temperature scale from the corrected antenna temperature requires only a simple scalar division by the beam efficiency factor. For KFPA observations at 23.7 GHz, this is eta_mb ~0.89 and can be measured from calibration observations or estimated from information given in the GBT Proposers Guide.
+Note that scaling to a main beam temperature scale from the corrected antenna temperature requires only a simple scalar division by the beam efficiency factor. For KFPA observations at 23.7 GHz, this is eta_mb ~0.89 and can be measured from calibration observations or estimated from information given in the GBT Proposers Guide.
 
 .. todo::
  
@@ -565,7 +565,7 @@ Note the scaling to a main beam temperature scale from the corrected antenna tem
 4.1.3 Smoothing a Single Polarization
 _____________________________________
 
-Note that the goal for the velocity resolution of the RAMPS survey is 0.2 km/s per channel. Having loaded out spectrum via the 'getsigref' command, we can now access the data structure !g, which contains information we might normally expect to find in a FITS file header. The !g idl structure itself is a general container and the !g.s[0] structure relateds directly to the spectral data.
+Note that the goal for the velocity resolution of the RAMPS survey is 0.2 km/s per channel. Having loaded our spectrum via the ''getsigref'' command, we can now access the data structure !g, which contains information we might normally expect to find in a FITS file header. The !g idl structure itself is a general container and the !g.s[0] structure relates directly to the spectral data.
 
 Printing the native resolution of the observed data can be done via:
 
@@ -573,7 +573,7 @@ Printing the native resolution of the observed data can be done via:
 
    print, !g.s[0].frequency_resolution
 
-This shows that the native resolution of the observed data us 1430.5115 Hz. At 23.694 GHz, this is the equivalent to a velocity difference of 0.0181 km/s and we must smooth to the requisite resolution of 0.2 km/s.
+This shows that the native resolution of the observed data is 1430.5115 Hz. At 23.694 GHz, this is the equivalent to a velocity difference of 0.0181 km/s and we must smooth to the requisite resolution of 0.2 km/s.
 
 We can apply a smoothing kernel over 11 channels via:
 
@@ -586,7 +586,7 @@ This results in a spectrum that looks like:
 .. image:: material/KFPA_tutorial/06_kfpa_tutorial_1pol_smooth.png
    :width: 100%
 
-An indication of some emission may be seen at around velocity of 58 km/s. Remember that this spectrum represents a whole 0.26° stripe ans so any localized areas of emission will be 'washed out' by the rest of the stripe.
+An indication of some emission may be seen at around velocity of 58 km/s. Remember that this spectrum represents a whole 0.26° stripe and so any localized areas of emission will be 'washed out' by the rest of the stripe.
 
 4.2 Data Reduction
 ------------------
@@ -598,7 +598,7 @@ ___________________________________
 
 In order to find the spectrum of a single position in our map, we want to reduce the data for a single integration via the use of the parameter 'intnum'. In order to retrieve all of the information for that position, we would want to average the two observed polarizations, as well as the data from each beam.
 
-Averging the polarizations can be achieved via:
+Averaging the polarizations can be achieved via:
 
 .. code-block:: idl
 
@@ -617,7 +617,7 @@ This results in a spectrum that looks like:
 
 Emission can clearly be seen centered at ~57 km/s.
 
-It should be noted that averaging data from multiple beams at this point is not beneficial. For a given scan/integration, the beams are at different positions on the sky; therefor, averaging their data together would not be representative of a single sky position. Because of this, it is sensible to reduce the data for each beam individually and then combine them via an overall gridding procedure.
+It should be noted that averaging data from multiple beams at this point is not beneficial. For a given scan/integration, the beams are at different positions on the sky; therefore, averaging their data together would not be representative of a single sky position. Because of this, it is sensible to reduce the data for each beam individually and then combine them via an overall gridding procedure.
 
 With this in mind, it should also be noted that the approach here is to reduce the map integration-by-integration, producing files which can then be fed into the gbtgridder routine, which will produce the final cube. As such, some decisions need to be made at this point, such as whether the individual polarizations should be averaged at the beginning, or output separately so that they can be averaged by the gridder. For the purposes of illustration, we keep the polarizations separate here. This is generally good practice as issues which may affect data quality (e.g. RFI or instrumentation failure) are often associated with a single polarization. If any such issues arise, having the data separated into different polarizations can facilitate more granular inspection and allow for flagging of poor data.
 
@@ -626,7 +626,7 @@ ______________________
 
 One thing yet to be done is removing the baseline level. As we do not (necessarily) know in advance what the expected velocity range of any emission in the map might be, it makes sense to initially remove a low order polynomial over the entire spectral range. By using a low factor polynomial (e.g. 2), we avoid fitting to any potential emission. Although, we should avoid including the band edges where it can be seen that power tapers off. This might have unwanted effects on the baseline fitting. The user can interactively click on the spectrum edges and set the region to be fitted.
 
-An initial estimate of the region can be fitted can be obtained via:
+An initial estimate of the region can be fitted via:
 
 .. code-block:: idl
 
@@ -645,7 +645,7 @@ Once this is done, the relevant channel numbers can be retrieved via:
 
 Manually setting a region will cause the numbers to vary from user to user. For the purposes of this example, we will use the channel numbers 589 and 15854.
 
-Now the region is defined, the polynomial factor can be applied, and the fitted baseline inspected via:
+Now that the region is defined, the polynomial factor can be applied, and the fitted baseline inspected via:
 
 .. code-block:: idl
 
@@ -667,23 +667,21 @@ The actual removal of the baseline is achieved via:
 .. image:: material/KFPA_tutorial/12_kfpa_tutorial_baseline_removed_spectrum.png
    :width: 100%
 
-Note again that we are not attempting to remove any 'wiggly' baseline shape at this step, merely calibrating the spectra to the same overall level by removing any broad excess/deficit power level. For most projects which do not require particularly high calibration precision, this will likely be adequate for a final science product. If more precision is necessary, this should be an iterative step in which emission is identified and velocity ranges set more carefully so that higher-order polynomial baseline shapes can be fitted and removed. This should be done individually for each beam and polarization. A total of 14 individual instances in the case of KFPA, when using all beams and dual polarizations (as in this example).
+Note again that we are not attempting to remove any 'wiggly' baseline shape at this step, merely calibrating the spectra to the same overall level by removing any broad excess/deficit power level. For most projects which do not require particularly high calibration precision, this will likely be adequate for a final science product. If more precision is necessary, this should be an iterative step in which emission is identified and velocity ranges set more carefully so that higher-order polynomial baseline shapes can be fitted and removed. This must be done for each beam and polarization, a total of 14 individual instances in the case of KFPA when using all beams and dual polarizations (as in this example)
 
-4.3 Preparing Files for GBTGridder
-----------------------------------
+4.3 Batch Reduction
+-------------------
 
-At this point, we have applied scaling to the Ta* scale and found acceptable ranges and polynomial order for the baseline fit. Now we are ready to reduce out data integration-by-integration and output them into files which can then be fed into gbtgridder.
+At this point, we have applied scaling to the Ta* scale and found acceptable ranges and polynomial order for the baseline fit. Now we are ready to reduce our data integration-by-integration and output them into files which can then be fed into gbtgridder.
 
 Outputting the files is achieved by:
 
 .. code-block:: idl
 
-   fileout, 'W51_Map_Beam00_plnum0_infum0.fits',/new    ; opens new file for writing; '/new' is a flag to overwrite existing files of the same name
+   fileout, 'W51_Map_Beam00_plnum0_ifnum0.fits',/new    ; opens new file for writing; '/new' is a flag to overwrite existing files of the same name
    keep                                                 ; writes spectral data container contents to the file
 
-A complete initial data reduction of an individual feed/polarization/frequency, with the production of a file containing the reduced data can be done in a single script.
-
-This requires a procedure to be written and loaded into GBTIDL. Using bash in another terminal window, create a procedure/program (.pro) file using your preferred text editor.
+A complete initial data reduction of an individual feed/polarization/frequency, with the production of a file containing the reduced data can be done in a single script. This requires a procedure to be written and loaded into GBTIDL. Using bash in another terminal window, create a procedure/program (.pro) file using your preferred text editor.
 
 In a **new** terminal window, create a procedure file via:
 
@@ -693,7 +691,7 @@ In a **new** terminal window, create a procedure file via:
 
 You may use your preferred text editor. Whichever is used, name the file 'ramps_w51.pro' for the purposes of this example.
 
-The procedure can be formatted to reduce a single single and polarization per script or all 14 permutations of the 7 beams (fdnum=0,6)  and 2 polarizations (plnum=0,1) in a single script. Only a single spectral window will be used (ifnum=0).
+The procedure can be formatted to reduce a single beam and polarization per script or all 14 permutations of the 7 beams (fdnum=0,6)  and 2 polarizations (plnum=0,1) in a single script. Only a single spectral window will be used (ifnum=0).
 
 .. tab-set::
 
@@ -730,7 +728,7 @@ The procedure can be formatted to reduce a single single and polarization per sc
 
     .. tab-item:: All Beams/Polarizations
 
-       This procedure will reduce all beams and polarizations and create individual fits files for each permutation. This will take signifigantly longer than the single beam/polarization method. Be mindful of when, where, and on what machine you run this procedure.
+       This procedure will reduce all beams and polarizations and create individual fits files for each permutation. This will take significantly longer than the single beam/polarization method. Be mindful of when, where, and on what machine you run this procedure.
 
        .. code-block:: idl
    
@@ -766,7 +764,7 @@ The procedure can be formatted to reduce a single single and polarization per sc
 
    Take note that in IDL, comments begin with a semicolon (;), not a pound sign (#). Any script intended to be used in GBTIDL must follow this rule.
 
-Ensure the your procedure file is stored in your working directory. Go back to your terminal window with GBTIDL open, then load it in with the following commands:
+Ensure that your procedure file is stored in your working directory. Go back to your terminal window with GBTIDL open, then load it in with the following commands:
 
 .. code-block:: idl
 
@@ -781,16 +779,19 @@ For more information about how to write and use your own procedures in GBTIDL, v
 
    Insert link to 'Writing Your Own Procedures' page on GBTDocs.
 
-4.4 GBTGridder
---------------
+4.4 Gridding and Imaging
+------------------------
 
-In a new terminal, a basic description of the GBTGridder usage syntax, with input arguments, can be found on any GBO computer via:
+4.4.1 GBTGridder
+________________
+
+For those new to gbtgridder, basic descriptions of usage syntax, with input arguments, can be found on any GBO computer via:
 
 .. code-block:: bash 
 
    gbtgridder -h
 
-For our case here, we are going to run gbtdridder with the following:
+In a new terminal, we are going to run gbtgridder with the following:
 
 .. code-block:: bash
 
@@ -801,7 +802,7 @@ Now let's break down what this does:
 * **gbtgridder**
     Starts up gbtgridder.
 
-* **-k gausebessel**
+* **-k gaussbessel**
     Specifies the gridding kernel used. A Gauss/Bessel function most accurately represents the GBT beam and is likely the most appropriate choice for fully-sampled data.
 
 * **--clobber**
@@ -817,7 +818,7 @@ Now let's break down what this does:
     Sets the channel range that will be gridded into the output cube. Note that this range will be relevant to the data being input in gbtgridder. It is important here to note if the '/decimate' flag was passed to the 'gsmooth' command when the data was smoothed. If so, these channel numbers will be different by an equivalent factor from the raw data.
 
 * **--pixelwidth 9**
-    Defines the width of a pizel on the sky in arcseconds. A value roughly equivalent to 1/3 of the observed beamwidth is typical.
+    Defines the width of a pixel on the sky in arcseconds. A value roughly equivalent to 1/3 of the observed beamwidth is typical.
 
 * **-p TAN**
     The sky projection used for the output files.
@@ -834,13 +835,59 @@ Now let's break down what this does:
 * **--autoConfirm**
     Allows gbtgridder to proceed with the actual gridding without waiting for the user to confirm the input parameters once the input files are read.
 
-Having run this command... congratulations! You now have a fully reduced data cube.
+This should result in a new file called 'W51_IFNUM0_cube.fits' in your working directory. Having run this command... congratulations! You now have a fully reduced data cube.
+
+4.4.2 Moment 0 Map
+__________________
+
+Having run gbtgridder, we now have a data cube with two spatial axes (Galactic longitude and Galactic latitude) and one spectral axis. To see where the emission is on the sky, we can collapse the spectral axis into a single image. This is called a moment 0 map. It adds up the intensity in each velocity channel across a chosen range, weighted by the channel width, giving the total line emission at every position. The resulting units are K km/s.
+
+You are free to use whatever method of generating a moment 0 map that you are most comfortable with. This example will use the Python packages 'spectral-cub'', 'astrop'', 'matplotlib', and 'numpy'.
 
 .. todo::
 
-   Include information to create moment 0 map from data cube.
+   Include alternative imaging methods (e.g. CASA).
 
-An integrated (moment 0) map of this cube is shown below:
+If you do not already have these packages available to you, install via:
+
+.. code-block:: bash
+
+   pip install spectral-cube astropy matplotlib numpy
+
+Once installed, open a Python script or Jupyter notebook to create the moment 0 script.
+
+.. code-block:: python
+
+   from spectral_cube import SpectralCube   # handles 3D cubes
+   import astropy.units as u                # attaches units (e.g. km/s) to numbers
+   import matplotlib.pyplot as plt
+   import numpy as np
+
+   cube = SpectralCube.read('W51_IFNUM0_cube.fits')                        # "StokesWarning" is normal - keeps I component
+   cube = cube.with_spectral_unit(u.km/u.s, velocity_convention='radio')   # converts spectral axis to velocity (K km/s)
+
+   sub = cube.spectral_slab(45*u.km/u.s, 75*u.km/u.s)      # chosen velocity range - based on spectrum plot
+   mom0 = sub.moment(order=0, how='slice')                 # sum emission / velocity (one channel at a time)
+   mom0.write('W51_IFNUM0_mom0.fits', overwrite=True)
+
+   vmin, vmax = np.nanpercentile(mom0.value, [1, 99.9])    # color limits 1st -- 99.9th percentile - avoids washing out
+
+   # builds and displays plot
+   fig = plt.figure(figsize=(8, 7))
+   ax = fig.add_subplot(111, projection=mom0.wcs)
+   im = ax.imshow(mom0.value, origin='lower', vmin=vmin, vmax=vmax, cmap='jet')
+   fig.colorbar(im, ax=ax, label='K km/s')
+
+   ax.coords[0].set_axislabel('Galactic longitude (deg)')
+   ax.coords[1].set_axislabel('Galactic latitude (deg)')
+   ax.coords[0].set_major_formatter('d.dd')
+   ax.coords[1].set_major_formatter('d.dd')
+
+   plt.show()
+
+Now, having run this script... congratulations again! You now have an integrated (moment 0) map of the spectral data cube.
+
+Depending on your imaging method, your map should resemble the image below:
 
 .. image:: material/KFPA_tutorial/09_kfpa_tutorial_moment0_map.png
    :width: 100%
